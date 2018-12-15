@@ -112,10 +112,17 @@ def main(scr):
                     "VoidLinux",
                     "LinuxFromScratch",
                     "Debian",
+                    "Manjaro",
+                    "Linux Mint",
+                    "ElementaryOS",
+                    "Hannah Montana Linux",
+                    "FreeBSD",
+                    "Slackware",
+                    "RedHat"
                     ]
             ending = [
-                    " Rejoice!",
-                    " Soon...",
+                    # " Rejoice!",
+                    # " Soon...",
                     "..Worth it 👍",
                    f" Surely was using {choice(distros)} before",
                    f" {choice(distros)}--; NixOS++",
