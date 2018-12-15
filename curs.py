@@ -121,8 +121,7 @@ def main(scr):
                    f" {choice(distros)}--; NixOS++",
                    f" NixOS {count}:0 {choice(distros)}",
                    f" Another {choice(distros)} User just got enlightened",
-                   f" Another {choice(distros)} User finally saw the truth",
-                   f" Another {choice(distros)} User removed their own the blinders",
+                   f" Another {choice(distros)} User finally sees the truth",
                    f" The next {choice(distros)} User chose another class of issues to solve instead of fighting the same problems over and over again"
             ]
             thisEnding=choice(ending)
