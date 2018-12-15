@@ -1,17 +1,28 @@
 #!/usr/bin/env nix-shell
-#!nix-shell -p python3Packages.pyfiglet python3Packages.pyserial python3Packages.docopt -i python3
+#!nix-shell -p python3Packages.matrix-client python3Packages.pyfiglet python3Packages.pyserial python3Packages.docopt -i python3
 """ usage: curs [options]
 
 Options:
     --input=MODE  input mode (serial|space) [Default: serial]
     --device=DEV  input device for serial [Default: /dev/ttyUSB0]
     --font=font   font to use for the "thank you" [Default: standard]
+    --token=TOKEN   matrix.org access token, if unset no announce will be performed
+    --room=CHAN  matrix.org channel to write to [Default: #freenode_#krebsbots:matrix.org]
 """
 from curses import wrapper,curs_set
 from time import sleep
 import serial, json
 from pyfiglet import Figlet
 from docopt import docopt
+from random import choice
+# from makefu/events-publisher
+def announce(text, token, room=None):
+    from matrix_client.api import MatrixHttpApi
+    matrix = MatrixHttpApi("https://matrix.org",token=token)
+    matrix.sync()
+    roomid = matrix.get_room_id(room)
+    matrix.join_room(roomid)
+    matrix.send_message(roomid,text)
 
 
 def printlogo(scr):
@@ -53,9 +64,9 @@ def loadInstallCount():
     except:
         return 0
 
-def thankYou(scr,count,font='standard'):
+def thankYou(scr,count,font='standard',extra=""):
     height, width = scr.getmaxyx()
-    text = Figlet(font,width=width,justify="center").renderText(f"Congrats !\n\nInstallation Number {count} !")
+    text = Figlet(font,width=width,justify="center").renderText(f"Congratulations !\nInstallation Number {count} !\n\n{extra}")
     twidth = max([len(l) for l in text.splitlines()])
     theight = len(text.splitlines())
     scr.addstr(int((height - theight)/2), 0, text)
@@ -67,6 +78,8 @@ def main(scr):
     font = args['--font']
     input = args['--input']
     device = args['--device']
+    token = args['--token']
+    room = args['--room']
     height,width = scr.getmaxyx()
     scr.clear()
     curs_set(0)
@@ -92,8 +105,32 @@ def main(scr):
         if pressed:
             count = incrementCounter(count)
             scr.clear()
-            thankYou(scr,count,font)
+            distros = [
+                    "ArchLinux",
+                    "Gentoo",
+                    "Ubuntu",
+                    "VoidLinux",
+                    "LinuxFromScratch",
+                    "Debian",
+                    ]
+            ending = [
+                    " Rejoice!",
+                    " Soon...",
+                    "..Worth it 👍",
+                   f" Surely was using {choice(distros)} before",
+                   f" {choice(distros)}--; NixOS++",
+                   f" NixOS {count}:0 {choice(distros)}",
+                   f" Another {choice(distros)} User just got enlightened",
+                   f" Another {choice(distros)} User finally saw the truth",
+                   f" Another {choice(distros)} User removed their own the blinders",
+                   f" The next {choice(distros)} User chose another class of issues to solve instead of fighting the same problems over and over again"
+            ]
+            thisEnding=choice(ending)
+            thankYou(scr,count,font,thisEnding)
             scr.refresh()
+            if token:
+                announce(f"35C3 NixOS Installation number *{count}* just completed.{thisEnding}"
+                        ,token,room=room)
             sleep(10)
             scr.clear()
             # cleanup input buffer after 10s
