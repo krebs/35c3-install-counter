@@ -118,15 +118,17 @@ def main(scr):
                     "Hannah Montana Linux",
                     "FreeBSD",
                     "Slackware",
-                    "RedHat"
+                    "IBM RedHat",
+                    "IBM Fedora"
                     ]
             ending = [
                     # " Rejoice!",
                     # " Soon...",
-                    "..Worth it 👍",
+                    ".. Worth it 👍",
+                    " error: cannot coerce an integer to a string, at unknown position"
                    f" Surely was using {choice(distros)} before",
                    f" {choice(distros)}--; NixOS++",
-                   f" NixOS {count}:0 {choice(distros)}",
+                   f" NixOS {count} : 0 {choice(distros)}",
                    f" Another {choice(distros)} User just got enlightened",
                    f" Another {choice(distros)} User finally sees the truth",
                    f" The next {choice(distros)} User chose another class of issues to solve instead of fighting the same problems over and over again"
